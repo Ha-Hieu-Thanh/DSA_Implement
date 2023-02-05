@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+
 using namespace std;
 struct Node
 {
@@ -113,19 +115,22 @@ public:
   // Delete the node at 'pos' position in the linked list
   int deleteNode(int pos)
   {
+    if (pos == 0)
+    {
+      int temp = head->data;
+      head = head->next;
+      return temp;
+    }
+    if (pos == 1)
+    {
+      int val_temp = head->next->data;
+      head->next = head->next->next;
+      return val_temp;
+    }
     // Nếu pos < size() thì xóa Node tại pos
     if (pos < this->size())
     {
       int val_temp = this->retrieve(pos).data;
-      // Nếu pos = 0 thì head = head->next
-      if (pos == 0)
-      {
-        head = head->next;
-      }
-      if (pos == 1)
-      {
-        head->next = head->next->next;
-      }
       // Nếu pos > 1 thì temp->next = temp->next->next
       Node *temp = head;
       for (int i = 0; i < pos - 1; i++)
@@ -402,13 +407,190 @@ void TestForDoubleLinkedList()
   std::cout << "head: " << list.getHead().data << std::endl;
   std::cout << "tail: " << list.getTail().data << std::endl;
 }
+
+class Stack
+{
+private:
+  int top;
+  LinkedList list;
+
+public:
+  Stack()
+  {
+  }
+  int push(int x)
+  {
+    list.insert(x, 0);
+    top = x;
+  }
+  int pop()
+  {
+    int temp = top;
+    list.deleteNode(0);
+    top = list.getHead().data;
+    return temp;
+  }
+  int size()
+  {
+    return list.size();
+  }
+  int getTop()
+  {
+    return top;
+  }
+  int isEmpty()
+  {
+    return list.size() == 0;
+  }
+  void printStack()
+  {
+    list.printList();
+  }
+};
+
+void TestForStack()
+{
+  cout << "-----------" << endl;
+  cout << "|  Stack  |" << endl;
+  cout << "-----------" << endl;
+  Stack stack;
+  for (int i = 0; i < 10; i++)
+  {
+    stack.push(i);
+  }
+  stack.printStack();
+  std::cout << "size: " << stack.size() << std::endl;
+  std::cout << "pop: " << stack.pop() << std::endl;
+  stack.printStack();
+  std::cout << "size: " << stack.size() << std::endl;
+  std::cout << "top: " << stack.getTop() << std::endl;
+  std::cout << "isEmpty: " << stack.isEmpty() << std::endl;
+}
+
+class Queue
+{
+private:
+  LinkedList list;
+  int first;
+  int last;
+
+public:
+  Queue()
+  {
+  }
+  int enqueue(int x)
+  {
+    list.insert(x);
+    first = list.retrieve(0).data;
+    last = x;
+    return x;
+  }
+  int dequeue()
+  {
+    int temp = first;
+    first = list.retrieve(1).data;
+    // list.deleteNode(0);
+    list.deleteNode(0);
+    return temp;
+  }
+  int size()
+  {
+    return list.size();
+  }
+  int getFirst()
+  {
+    return first;
+  }
+  int getLast()
+  {
+    return last;
+  }
+  int isEmpty()
+  {
+    return list.size() == 0;
+  }
+  void printQueue()
+  {
+    list.printList();
+  }
+};
+
+void TestForQueue()
+{
+  cout << "-----------" << endl;
+  cout << "|  Queue  |" << endl;
+  cout << "-----------" << endl;
+  Queue queue;
+  for (int i = 0; i < 10; i++)
+  {
+    queue.enqueue(i);
+  }
+  queue.printQueue();
+  std::cout << "size: " << queue.size() << std::endl;
+  std::cout << "dequeue: " << queue.dequeue() << std::endl;
+  queue.printQueue();
+  std::cout << "size: " << queue.size() << std::endl;
+  std::cout << "first: " << queue.getFirst() << std::endl;
+  std::cout << "last: " << queue.getLast() << std::endl;
+  std::cout << "isEmpty: " << queue.isEmpty() << std::endl;
+}
+void menu()
+{
+  cout << "|=========================|" << endl;
+  cout << "|===Data Structure Test===|" << endl;
+  cout << "|-------------------------|" << endl;
+  cout << "|    |     Menu     |     |" << endl;
+  cout << "|-------------------------|" << endl;
+  cout << "| 1. Single Linked List   |" << endl;
+  cout << "| 2. Double Linked List   |" << endl;
+  cout << "| 3. Stack                |" << endl;
+  cout << "| 4. Queue                |" << endl;
+  cout << "|=========================|" << endl;
+}
 int main()
 {
-  // test all method of linked list
-  TestForLinkedList();
-  std::cout << "==============================" << std::endl;
-  // test all method of double linked list
-  TestForDoubleLinkedList();
-
+  menu();	
+  string choice;
+  do
+  {
+    cout << "Please enter your choice: ";
+    cin >> choice;
+    if (choice == "end")
+    {
+      system("cls");
+      break;
+    }
+    if (choice == "1")
+    {
+      system("cls");
+      TestForLinkedList();
+    }
+    else if (choice == "2")
+    {
+      system("cls");
+      TestForDoubleLinkedList();
+    }
+    else if (choice == "3")
+    {
+      system("cls");
+      TestForStack();
+    }
+    else if (choice == "4")
+    {
+      system("cls");
+      TestForQueue();
+    }
+    else if (choice == "menu")
+    {
+      system("cls");
+      menu();
+    }
+    else
+    {
+      system("cls");
+      cout << "Invalid input!" << endl;
+    }
+  } while (1);
+  cout << "Thank you for using!" << endl;
   return 0;
 }
